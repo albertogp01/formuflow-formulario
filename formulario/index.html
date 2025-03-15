@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formuflow - Sistema de Entrenamiento Personalizado</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="intro-animation">
+        <div class="intro-logo">
+            <img src="img/logo.svg" alt="Formuflow Logo">
+        </div>
+        <div class="intro-progress">
+            <div class="intro-progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-steps">
+            <div class="progress-step active" data-step="1">
+                <div class="step-circle">1</div>
+                <div class="step-text">Datos personales</div>
+            </div>
+            <div class="progress-step" data-step="2">
+                <div class="step-circle">2</div>
+                <div class="step-text">Entrenamiento</div>
+            </div>
+            <div class="progress-step" data-step="3">
+                <div class="step-circle">3</div>
+                <div class="step-text">Historial Médico</div>
+            </div>
+            <div class="progress-step" data-step="4">
+                <div class="step-circle">4</div>
+                <div class="step-text">Ejercicios</div>
+            </div>
+            <div class="progress-bar"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Página 1: Datos personales -->
+        <div class="question-container" data-question="1">
+            <h2 class="page-title">Datos personales</h2>
+            <p class="page-subtitle">Para crear tu plan de entrenamiento personalizado, necesitamos conocerte mejor</p>
+            
+            <div class="questions-grid">
+                <!-- Fila 1: Nombre y Edad (preguntas cortas) -->
+                <div class="question-item">
+                    <label class="field-label">¿Cómo quieres que te llamemos?</label>
+                    <p class="field-description">Este campo personalizará tu plan de entrenamiento.</p>
+                    <div class="input-wrapper">
+                        <input type="text" class="question-input" placeholder="Tu nombre" data-required="true" data-no-numbers="true" data-field="nombre">
+                    </div>
+                    <div class="validation-message">Por favor, ingresa tu nombre</div>
+                    <div class="number-validation">El nombre no debe contener números</div>
+                </div>
+                
+                <div class="question-item">
+                    <label class="field-label">¿Cuál es tu edad?</label>
+                    <p class="field-description">La edad es un factor importante para adaptar tu entrenamiento.</p>
+                    <div class="input-wrapper">
+                        <input type="text" class="question-input" placeholder="Ej: 32" data-required="true" data-numbers-only="true" data-field="edad">
+                    </div>
+                    <div class="validation-message">Por favor, ingresa tu edad</div>
+                    <div class="number-validation">Este campo solo acepta números</div>
+                </div>
+                
+                <!-- Fila 2: Peso y Altura (preguntas cortas) -->
+                <div class="question-item">
+                    <label class="field-label">¿Cuánto pesas?</label>
+                    <p class="field-description">Ayuda a calcular tu IMC y necesidades calóricas.</p>
+                    <div class="input-wrapper">
+                        <input type="text" class="question-input" placeholder="Kg" data-required="true" data-field="peso">
+                        <div class="input-suffix">kg</div>
+                    </div>
+                    <div class="validation-message">Por favor, ingresa tu peso</div>
+                </div>
+                
+                <div class="question-item">
+                    <label class="field-label">¿Cuál es tu altura?</label>
+                    <p class="field-description">Necesaria para calcular el índice de masa corporal.</p>
+                    <div class="input-wrapper">
+                        <input type="text" class="question-input" placeholder="Cm" data-required="true" data-field="altura">
+                        <div class="input-suffix">cm</div>
+                    </div>
+                    <div class="validation-message">Por favor, ingresa tu altura</div>
+                </div>
+                
+                <!-- Fila 3: Género (pregunta de opciones) -->
+                <div class="question-item full-width">
+                    <label class="field-label">¿Cuál es tu género?</label>
+                    <p class="field-description">Nos ayuda a personalizar mejor tu programa de entrenamiento.</p>
+                    <div class="radio-options-container">
+                        <div class="radio-option" data-value="Masculino" data-field="genero">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">Masculino</div>
+                        </div>
+                        <div class="radio-option" data-value="Femenino" data-field="genero">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">Femenino</div>
+                        </div>
+                        <div class="radio-option" data-value="No especificar" data-field="genero">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">Prefiero no especificar</div>
+                        </div>
+                    </div>
+                    <div class="validation-message">Por favor, selecciona una opción</div>
+                </div>
+                
+                <!-- Fila 4: Email (pregunta individual) -->
+                <div class="question-item full-width">
+                    <label class="field-label">¿Cuál es tu dirección de correo electrónico?</label>
+                    <p class="field-description">Te enviaremos tu plan de entrenamiento a esta dirección.</p>
+                    <div class="input-wrapper">
+                        <input type="email" class="question-input" placeholder="correo@ejemplo.com" data-required="true" data-email="true" data-field="email">
+                    </div>
+                    <div class="validation-message">Por favor, ingresa un correo electrónico</div>
+                    <div class="email-validation">Por favor, ingresa un formato de correo válido</div>
+                </div>
+            </div>
+            
+            <div class="navigation-buttons">
+                <button class="nav-button button-continue visible">
+                    <span>Continuar</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Página 2: Entrenamiento -->
+        <div class="question-container" data-question="2">
+            <h2 class="page-title">Entrenamiento</h2>
+            <p class="page-subtitle">Cuéntanos sobre tu experiencia y objetivos de entrenamiento</p>
+            
+            <div class="questions-grid">
+                <!-- Objetivo principal -->
+                <div class="question-item full-width">
+                    <label class="field-label">¿Cuál es tu objetivo principal de entrenamiento?</label>
+                    <p class="field-description">Selecciona el que más te interese</p>
+                    <div class="options-container">
+                        <div class="option-item" data-value="Mejorar fuerza" data-field="objetivo">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Mejorar fuerza</div>
+                                <div class="option-description">Enfoque en el desarrollo de la fuerza muscular y aumento de capacidad de carga.</div>
+                            </div>
+                        </div>
+                        <div class="option-item" data-value="Mejorar resistencia" data-field="objetivo">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Mejorar resistencia</div>
+                                <div class="option-description">Enfoque en mejorar tu capacidad cardiovascular y resistencia a la fatiga.</div>
+                            </div>
+                        </div>
+                        <div class="option-item" data-value="Mantenimiento general" data-field="objetivo">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Mantenimiento general</div>
+                                <div class="option-description">Enfoque en mantener un buen nivel de salud y condición física general.</div>
+                            </div>
+                        </div>
+                    </div>            
+                    <div class="validation-message">Por favor, selecciona una opción</div>
+                </div>
+
+                <!-- Nivel de experiencia -->
+                <div class="question-item full-width">
+                    <label class="field-label">¿Cuál es tu nivel de experiencia con el entrenamiento?</label>
+                    <p class="field-description">Selecciona el que más te identifique</p>
+                    <div class="options-container">
+                        <div class="option-item" data-value="Principiante" data-field="nivel">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Principiante (menos de 6 meses entrenando regularmente)</div>
+                                <div class="option-description">Estás comenzando tu viaje fitness o has entrenado por poco tiempo de manera constante.</div>
+                            </div>
+                        </div>
+                        <div class="option-item" data-value="Intermedio" data-field="nivel">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Intermedio (entre 6 meses y 2 años entrenando regularmente)</div>
+                                <div class="option-description">Tienes experiencia con diversas rutinas y conoces la mayoría de ejercicios básicos.</div>
+                            </div>
+                        </div>
+                        <div class="option-item" data-value="Avanzado" data-field="nivel">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Avanzado (más de 2 años entrenando regularmente)</div>
+                                <div class="option-description">Tienes amplia experiencia en diversos métodos de entrenamiento y técnicas avanzadas.</div>
+                            </div>
+                        </div>
+                    </div>            
+                    <div class="validation-message">Por favor, selecciona una opción</div>
+                </div>
+
+                <!-- Condición física actual -->
+                <div class="question-item full-width">
+                    <label class="field-label">¿Cómo describirías tu condición física actual?</label>
+                    <p class="field-description">Selecciona la opción que mejor refleje tu actividad habitual</p>
+                    <div class="options-container">
+                        <div class="option-item" data-value="Sedentaria" data-field="condicion_fisica">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Sedentaria (poco o ningún ejercicio)</div>
+                                <div class="option-description">Tu día a día implica poca actividad física y no realizas ejercicio regularmente.</div>
+                            </div>
+                        </div>
+                        <div class="option-item" data-value="Ligera" data-field="condicion_fisica">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Ligera (ejercicio 1-2 veces por semana)</div>
+                                <div class="option-description">Realizas alguna actividad física puntual o ejercicio liviano 1-2 veces por semana.</div>
+                            </div>
+                        </div>
+                        <div class="option-item" data-value="Moderada" data-field="condicion_fisica">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Moderada (ejercicio 3-4 veces por semana)</div>
+                                <div class="option-description">Mantienes una rutina consistente de ejercicio varias veces por semana.</div>
+                            </div>
+                        </div>
+                        <div class="option-item" data-value="Activa" data-field="condicion_fisica">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Activa (ejercicio 5+ veces por semana)</div>
+                                <div class="option-description">Tu rutina incluye actividad física casi todos los días de la semana.</div>
+                            </div>
+                        </div>
+                        <div class="option-item" data-value="Atlética" data-field="condicion_fisica">
+                            <div class="option-radio"></div>
+                            <div class="option-content">
+                                <div class="option-label">Atlética (entrenamiento intenso y regular)</div>
+                                <div class="option-description">Sigues un programa de entrenamiento intenso y estructurado habitualmente.</div>
+                            </div>
+                        </div>
+                    </div>            
+                    <div class="validation-message">Por favor, selecciona una opción</div>
+                </div>
+
+                <!-- Lugar de entrenamiento -->
+                <div class="question-item full-width">
+                    <label class="field-label">¿Dónde sueles entrenar?</label>
+                    <p class="field-description">Indica tu lugar habitual de entrenamiento</p>
+                    <div class="radio-options-container">
+                        <div class="radio-option" data-value="Gimnasio" data-field="lugar_entrenamiento">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">Entreno en un gimnasio</div>
+                        </div>
+                        <div class="radio-option" data-value="Casa" data-field="lugar_entrenamiento">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">Entreno en casa</div>
+                        </div>
+                        <div class="radio-option" data-value="Exterior" data-field="lugar_entrenamiento">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">Entreno al aire libre</div>
+                        </div>
+                    </div>
+                    <div class="validation-message">Por favor, selecciona una opción</div>
+                </div>
+
+                <!-- Días por semana -->
+                <div class="question-item">
+                    <label class="field-label">¿Cuántos días a la semana puedes entrenar?</label>
+                    <p class="field-description">Selecciona tu disponibilidad semanal</p>
+                    <div class="radio-options-container">
+                        <div class="radio-option" data-value="1 día" data-field="dias_entrenamiento">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">1 día</div>
+                        </div>
+                        <div class="radio-option" data-value="2 días" data-field="dias_entrenamiento">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">2 días</div>
+                        </div>
+                        <div class="radio-option" data-value="3 días" data-field="dias_entrenamiento">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">3 días</div>
+                        </div>
+                        <div class="radio-option" data-value="4 días" data-field="dias_entrenamiento">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">4 días</div>
+                        </div>
+                        <div class="radio-option" data-value="5 días" data-field="dias_entrenamiento">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">5 días</div>
+                        </div>
+                    </div>
+                    <div class="validation-message">Por favor, selecciona una opción</div>
+                </div>
+
+                <!-- Tiempo por sesión -->
+                <div class="question-item">
+                    <label class="field-label">¿Cuánto tiempo puedes dedicar por sesión?</label>
+                    <p class="field-description">Selecciona la duración que mejor se adapte a tu disponibilidad</p>
+                    <div class="radio-options-container">
+                        <div class="radio-option" data-value="60 minutos" data-field="tiempo_sesion">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">60 minutos/sesión</div>
+                        </div>
+                        <div class="radio-option" data-value="75 minutos" data-field="tiempo_sesion">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">75 minutos/sesión</div>
+                        </div>
+                        <div class="radio-option" data-value="90 minutos" data-field="tiempo_sesion">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">90 minutos/sesión</div>
+                        </div>
+                        <div class="radio-option" data-value="120 minutos" data-field="tiempo_sesion">
+                            <div class="radio-circle"></div>
+                            <div class="radio-label">120 minutos/sesión</div>
+                        </div>
+                    </div>
+                    <div class="validation-message">Por favor, selecciona una opción</div>
+                </div>
+            </div>
+            
+            <div class="navigation-buttons">
+                <button class="nav-button button-back">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    <span>Atrás</span>
+                </button>
+                <button class="nav-button button-continue visible">
+                    <span>Continuar</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Página 3: Historial Médico -->
+<div class="question-container" data-question="3">
+    <h2 class="page-title">Historial Médico</h2>
+    <p class="page-subtitle">Esta información es importante para adaptar tu entrenamiento de forma segura</p>
+    
+    <div class="questions-grid">
+        <!-- Cirugía reciente -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Has tenido alguna cirugía reciente (último año) que debamos tener en cuenta?</label>
+            <p class="field-description">Nos ayudará a adaptar los ejercicios de manera segura para ti.</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="cirugia_reciente" data-toggle="cirugia_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="cirugia_reciente" data-toggle="cirugia_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="cirugia_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Descríbenos brevemente tu cirugía reciente" data-field="cirugia_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Lesión muscular -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Tienes alguna lesión muscular que pueda afectar tu movilidad?</label>
+            <p class="field-description">E.g.: distensiones, roturas fibrilares, contracturas.</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="lesion_muscular" data-toggle="lesion_muscular_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="lesion_muscular" data-toggle="lesion_muscular_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="lesion_muscular_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Descríbenos brevemente tu lesión muscular" data-field="lesion_muscular_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Tendinopatía -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Tienes alguna tendinopatía que pueda afectar tu movilidad?</label>
+            <p class="field-description">E.g.: tendinitis, tendinosis, rotura parcial de tendón.</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="tendinopatia" data-toggle="tendinopatia_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="tendinopatia" data-toggle="tendinopatia_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="tendinopatia_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Descríbenos brevemente tu tendinopatía" data-field="tendinopatia_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Limitaciones de movilidad -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Tienes limitaciones de movilidad en alguna articulación?</label>
+            <p class="field-description">E.g.: "tengo dificultad para levantar el brazo por encima de la cabeza".</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="limitacion_articular" data-toggle="limitacion_articular_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="limitacion_articular" data-toggle="limitacion_articular_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="limitacion_articular_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Descríbenos brevemente tus limitaciones de movilidad" data-field="limitacion_articular_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Limitaciones en ejercicios específicos -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Tienes alguna limitación al realizar ejercicios como sentadillas, flexiones o saltos?</label>
+            <p class="field-description">E.g.: me cuesta hacer sentadillas profundas debido a dolor en las rodillas.</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="limitacion_ejercicios" data-toggle="limitacion_ejercicios_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="limitacion_ejercicios" data-toggle="limitacion_ejercicios_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="limitacion_ejercicios_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Descríbenos brevemente tus limitaciones al realizar ejercicios" data-field="limitacion_ejercicios_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Problemas posturales -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Tienes algún problema postural que afecte tu entrenamiento?</label>
+            <p class="field-description">E.g.: escoliosis, cifosis, hiperlordosis.</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="problema_postural" data-toggle="problema_postural_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="problema_postural" data-toggle="problema_postural_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="problema_postural_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Descríbenos brevemente tus problemas posturales" data-field="problema_postural_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Condiciones médicas -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Sufres de alguna condición médica que afecte tu rendimiento?</label>
+            <p class="field-description">E.g: problemas de corazón, hipertensión, diabetes, artritis.</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="condicion_medica" data-toggle="condicion_medica_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="condicion_medica" data-toggle="condicion_medica_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="condicion_medica_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Descríbenos brevemente tus condiciones médicas" data-field="condicion_medica_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Medicación -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Estás tomando alguna medicación que pueda afectar tu entrenamiento?</label>
+            <p class="field-description">Por favor, indica el medicamento y para qué condición lo tomas (opcional).</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="medicacion" data-toggle="medicacion_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="medicacion" data-toggle="medicacion_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="medicacion_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Indica qué medicamentos tomas y para qué condición" data-field="medicacion_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Restricciones alimenticias (mantenida del original) -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Tienes alguna restricción alimenticia?</label>
+            <p class="field-description">Para adaptar posibles recomendaciones nutricionales.</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Sí" data-field="restricciones_alimenticias" data-toggle="restricciones_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Sí</div>
+                </div>
+                <div class="radio-option selected" data-value="No" data-field="restricciones_alimenticias" data-toggle="restricciones_descripcion">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No</div>
+                </div>
+            </div>
+            <div class="conditional-field" id="restricciones_descripcion" style="display: none;">
+                <div class="input-wrapper">
+                    <textarea class="question-input textarea" placeholder="Cuéntanos sobre tus restricciones alimenticias" data-field="restricciones_descripcion"></textarea>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+    </div>
+    
+    <div class="navigation-buttons">
+        <button class="nav-button button-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>Atrás</span>
+        </button>
+        <button class="nav-button button-continue visible">
+            <span>Continuar</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+        <!-- Página 4: Ejercicios -->
+<div class="question-container" data-question="4">
+    <h2 class="page-title">Ejercicios y Preferencias</h2>
+    <p class="page-subtitle">Cuéntanos qué tipo de ejercicios prefieres para personalizar tu plan</p>
+    
+    <div class="questions-grid">
+        <!-- Ejercicios favoritos -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Hay algún tipo de ejercicio que te guste especialmente?</label>
+            <p class="field-description">Por ejemplo: entrenamiento con pesas, ejercicios funcionales, HIIT, cardio, yoga, etc.</p>
+            <div class="input-wrapper">
+                <textarea class="question-input textarea" placeholder="Cuéntanos sobre tus ejercicios favoritos" data-field="ejercicios_favoritos"></textarea>
+            </div>
+        </div>
+
+        <!-- Ejercicios que desagradan -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Hay algún tipo de ejercicio que te desagrade o prefieras evitar?</label>
+            <p class="field-description">Por ejemplo: correr, sentadillas, ejercicios de abdominales, etc.</p>
+            <div class="input-wrapper">
+                <textarea class="question-input textarea" placeholder="Cuéntanos qué ejercicios prefieres evitar" data-field="ejercicios_evitar"></textarea>
+            </div>
+        </div>
+
+        <!-- Preferencia de tipo de entrenamiento -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Prefieres entrenamientos enfocados en un grupo muscular por día o entrenamientos de cuerpo completo?</label>
+            <p class="field-description">Selecciona el tipo de entrenamiento que prefieres</p>
+            <div class="radio-options-container">
+                <div class="radio-option" data-value="Split" data-field="tipo_entrenamiento">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Un grupo muscular por día (split)</div>
+                </div>
+                <div class="radio-option" data-value="Cuerpo completo" data-field="tipo_entrenamiento">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Cuerpo completo</div>
+                </div>
+                <div class="radio-option" data-value="Combinación" data-field="tipo_entrenamiento">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">Combinación (upper/lower, push/pull/legs, etc.)</div>
+                </div>
+                <div class="radio-option" data-value="Sin preferencia" data-field="tipo_entrenamiento">
+                    <div class="radio-circle"></div>
+                    <div class="radio-label">No tengo preferencia</div>
+                </div>
+            </div>
+            <div class="validation-message">Por favor, selecciona una opción</div>
+        </div>
+
+        <!-- Material específico -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Quieres usar material específico?</label>
+            <p class="field-description">Si es así, indícanos cuál. (E.g: TRX/Suspensión, kettlebells...)</p>
+            <div class="input-wrapper">
+                <textarea class="question-input textarea" placeholder="Cuéntanos sobre el material que quieres utilizar" data-field="material_especifico"></textarea>
+            </div>
+        </div>
+
+        <!-- Información adicional -->
+        <div class="question-item full-width">
+            <label class="field-label">¿Hay algo más que debamos saber para personalizar mejor tu rutina?</label>
+            <p class="field-description">Puedes decir cualquier información adicional que consideres relevante.</p>
+            <div class="input-wrapper">
+                <textarea class="question-input textarea" placeholder="Información adicional para personalizar tu rutina" data-field="info_adicional"></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <div class="navigation-buttons">
+        <button class="nav-button button-back">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            <span>Atrás</span>
+        </button>
+        <button class="nav-button button-submit visible">
+            <span>Enviar respuestas</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+        </button>
+    </div>
+</div>
+
+        <div class="nav-arrows">
+            <div class="nav-arrow nav-prev disabled">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 15l-6-6-6 6"/>
+                </svg>
+            </div>
+            <div class="nav-arrow nav-next">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 9l6 6 6-6"/>
+                </svg>
+            </div>
+        </div>
+
+        <div class="completion-screen">
+            <div class="celebration-container">
+                <div class="completion-icon">✓</div>
+            </div>
+            <h1 class="completion-title">¡Gracias por completar el formulario!</h1>
+            <div class="completion-message">
+              <p>¡Genial! Hemos recibido tus datos correctamente y nuestro sistema ya está generando tu plan de entrenamiento personalizado basado en tus necesidades específicas. Lo recibirás en tu correo electrónico en menos de 1 minuto.</p>
+            </div>
+            <div class="completion-actions">
+                <button class="nav-button button-next" onclick="location.href='index.html'">
+                    <span>Volver al inicio</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/intro.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/confetti.js"></script>
+</body>
+</html>
