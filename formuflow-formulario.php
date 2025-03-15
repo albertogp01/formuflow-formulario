@@ -78,8 +78,8 @@ function formuflow_enqueue_assets() {
     wp_enqueue_script('formuflow-navigation', plugin_dir_url(__FILE__) . 'formulario/js/navigation.js', array('jquery'), $version, true);
     wp_enqueue_script('formuflow-validation', plugin_dir_url(__FILE__) . 'formulario/js/validation.js', array('jquery'), $version, true);
     
-    // NUEVO: Añadir script de integración con API
-    wp_enqueue_script('formuflow-api', plugin_dir_url(__FILE__) . 'formulario/js/form-api.js', array('jquery'), $version, true);
+    // CORREGIDO: Usar el nombre de archivo correcto sin guion
+    wp_enqueue_script('formuflow-api', plugin_dir_url(__FILE__) . 'formulario/js/formapi.js', array('jquery'), $version, true);
     
     // Pasar variables al frontend - CONFIGURACIÓN ACTUALIZADA
     wp_localize_script('formuflow-api', 'formuflowConfig', array(
@@ -87,7 +87,9 @@ function formuflow_enqueue_assets() {
         'feedbackUrl' => FORMUFLOW_FEEDBACK_URL,
         'nonce' => wp_create_nonce('formuflow_submit_nonce'),
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'version' => $version
+        'version' => $version,
+        // AÑADIDO: Dominio del sitio para CORS
+        'siteDomain' => parse_url(get_site_url(), PHP_URL_HOST)
     ));
 }
 
@@ -125,30 +127,117 @@ function formuflow_shortcode($atts = array()) {
     // Reemplazar URL del segundo cuestionario
     $html = str_replace('http://fitform.coach/cuestionario', FORMUFLOW_FEEDBACK_URL, $html);
 
-    // Añadir script de depuración
+    // Añadir script de depuración mejorado
     $html .= '<script>
         console.log("Formulario cargado. Versión: ' . FORMUFLOW_VERSION . '");
         console.log("API URL:", "' . FORMUFLOW_API_URL . '");
         
         // Esta función se activará cuando se envíe el formulario
         function enviarDatosDirectamente(datos) {
-            if (typeof datos !== "object") return;
+            if (typeof datos !== "object") {
+                console.error("Error: datos no es un objeto", datos);
+                return;
+            }
             
             console.log("Enviando datos directamente:", datos);
             
-            fetch("' . FORMUFLOW_API_URL . '", {
-                method: "POST",
+            // Añadir información de depuración a los datos
+            datos.debug_info = {
+                timestamp: new Date().toISOString(),
+                url: window.location.href,
+                userAgent: navigator.userAgent,
+                referrer: document.referrer
+            };
+            
+            // Verificar primero si el backend está disponible
+            fetch("' . FORMUFLOW_API_URL . '".replace("/api/form/submit", "/health"), {
+                method: "GET",
                 headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(datos)
+                    "Accept": "application/json",
+                    "Cache-Control": "no-cache"
+                }
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log("Estado del backend:", response.status);
+                return response.text();
+            })
+            .then(text => {
+                console.log("Respuesta de verificación:", text);
+                
+                // Ahora enviar los datos reales
+                return fetch("' . FORMUFLOW_API_URL . '", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: JSON.stringify(datos)
+                });
+            })
+            .then(response => {
+                console.log("Estado de respuesta:", response.status);
+                console.log("Headers:", 
+                    Array.from(response.headers.entries())
+                        .map(([key, value]) => `${key}: ${value}`)
+                        .join(", ")
+                );
+                return response.text();
+            })
+            .then(text => {
+                console.log("Respuesta completa:", text);
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    console.warn("No se pudo parsear como JSON:", e);
+                    return { success: true, message: text };
+                }
+            })
             .then(data => {
-                console.log("Respuesta del servidor:", data);
+                console.log("Respuesta del servidor procesada:", data);
+                
+                // Mostrar un mensaje al usuario si hay un error
+                if (data && !data.success) {
+                    const mensaje = document.createElement("div");
+                    mensaje.style.padding = "15px";
+                    mensaje.style.margin = "15px 0";
+                    mensaje.style.backgroundColor = "#ffebee";
+                    mensaje.style.color = "#c62828";
+                    mensaje.style.border = "1px solid #ef9a9a";
+                    mensaje.style.borderRadius = "4px";
+                    mensaje.style.textAlign = "center";
+                    mensaje.style.fontWeight = "500";
+                    mensaje.textContent = "Error: " + (data.message || "Error desconocido") + ". Por favor, intenta de nuevo.";
+                    
+                    const container = document.querySelector(".completion-screen");
+                    if (container) {
+                        container.prepend(mensaje);
+                    }
+                }
             })
             .catch(error => {
                 console.error("Error al enviar datos:", error);
+                
+                // Intentar enviar a través de AJAX de WordPress como fallback
+                console.log("Intentando envío alternativo mediante AJAX de WordPress");
+                
+                // Formato específico de WP AJAX
+                const formData = new FormData();
+                formData.append("action", "formuflow_callback");
+                formData.append("nonce", "' . wp_create_nonce('formuflow_submit_nonce') . '");
+                formData.append("data", JSON.stringify(datos));
+                
+                fetch("' . admin_url('admin-ajax.php') . '", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log("Respuesta de AJAX WP:", data);
+                })
+                .catch(error => {
+                    console.error("Error en envío AJAX:", error);
+                });
             });
         }
         
@@ -163,6 +252,7 @@ function formuflow_shortcode($atts = array()) {
                             // La pantalla de finalización está visible
                             const formData = window.formData;
                             if (formData) {
+                                console.log("Pantalla de finalización detectada, enviando datos", formData);
                                 enviarDatosDirectamente(formData);
                             }
                         }

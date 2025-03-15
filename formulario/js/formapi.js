@@ -1,5 +1,5 @@
 /**
- * form-api.js - Versión corregida
+ * formapi.js - Versión corregida
  * Script para manejar la interacción entre el formulario y el backend API.
  */
 
