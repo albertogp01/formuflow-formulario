@@ -185,7 +185,8 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json'
+          'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
         },
         body: JSON.stringify(formDataToSend)
       });
@@ -209,14 +210,14 @@
         console.log('[Formuflow] Envío exitoso, mostrando pantalla de finalización');
         
         // Mostrar pantalla de finalización
-        const questionContainer = document.querySelector('.question-container');
-        if (questionContainer) {
-          questionContainer.style.display = 'none';
+        const currentContainer = document.querySelector('.question-container.active');
+        if (currentContainer) {
+          currentContainer.classList.remove('active');
         }
         
         const completionScreen = document.querySelector('.completion-screen');
         if (completionScreen) {
-          completionScreen.style.display = 'flex';
+          completionScreen.classList.add('visible');
           
           // Personalizar mensaje
           const titleElement = completionScreen.querySelector('.completion-title');
@@ -225,7 +226,7 @@
           }
         }
         
-        // Activar confeti
+        // Activar confeti si está disponible
         if (typeof Confetti === 'function') {
           try {
             new Confetti();

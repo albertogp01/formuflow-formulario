@@ -14,6 +14,12 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Inicializar tooltips para los círculos de progreso
     initProgressSteps();
+    
+    // Marcar visualmente los campos obligatorios
+    markRequiredFields();
+    
+    // Asegurar validación reforzada
+    setupEnhancedValidation();
 });
 
 // Función para inicializar los pasos de progreso
@@ -35,15 +41,124 @@ function initProgressSteps() {
     });
 }
 
-// Añadir al archivo main.js o crear uno nuevo si no existe
+// Función para marcar visualmente los campos obligatorios
+function markRequiredFields() {
+    // Marcar visualmente los campos obligatorios
+    const requiredFields = [
+        'nombre', 'genero', 'email', // Sección 1
+        'objetivo', 'lugar_entrenamiento', 'dias_entrenamiento', 'tiempo_sesion', // Sección 2
+        'tipo_entrenamiento' // Sección 4
+    ];
+    
+    // Para inputs de texto
+    document.querySelectorAll('.question-input').forEach(input => {
+        const isRequired = requiredFields.includes(input.dataset.field);
+        input.dataset.required = isRequired ? 'true' : 'false';
+        
+        // Añadir asterisco a las etiquetas de campos obligatorios
+        if (isRequired) {
+            const label = input.closest('.question-item').querySelector('.field-label');
+            if (label && !label.textContent.includes('*')) {
+                label.innerHTML += ' <span class="required-mark">*</span>';
+            }
+        }
+    });
+    
+    // Para grupos de radio
+    document.querySelectorAll('.radio-options-container').forEach(container => {
+        const option = container.querySelector('.radio-option');
+        if (option) {
+            const fieldName = option.dataset.field;
+            const isRequired = requiredFields.includes(fieldName);
+            
+            // Añadir asterisco a las etiquetas de campos obligatorios
+            if (isRequired) {
+                const label = container.closest('.question-item').querySelector('.field-label');
+                if (label && !label.textContent.includes('*')) {
+                    label.innerHTML += ' <span class="required-mark">*</span>';
+                }
+            }
+        }
+    });
+    
+    // Para grupos de opciones
+    document.querySelectorAll('.options-container').forEach(container => {
+        const option = container.querySelector('.option-item');
+        if (option) {
+            const fieldName = option.dataset.field;
+            const isRequired = requiredFields.includes(fieldName);
+            
+            // Añadir asterisco a las etiquetas de campos obligatorios
+            if (isRequired) {
+                const label = container.closest('.question-item').querySelector('.field-label');
+                if (label && !label.textContent.includes('*')) {
+                    label.innerHTML += ' <span class="required-mark">*</span>';
+                }
+            }
+        }
+    });
+    
+    // Añadir estilo CSS para el asterisco de campos obligatorios
+    const style = document.createElement('style');
+    style.textContent = `
+        .required-mark {
+            color: #ff3366;
+            font-weight: bold;
+            margin-left: 2px;
+        }
+    `;
+    document.head.appendChild(style);
+}
 
-// Actualización para la función showCompletionScreen en main.js
+// Función para configurar la validación reforzada
+function setupEnhancedValidation() {
+    // Asegurarnos de que las validaciones se ejecuten correctamente para cada sección
+    const validateButtonClick = function(event) {
+        if (navigationInProgress) return;
+        
+        const button = event.currentTarget;
+        const container = button.closest('.question-container');
+        if (!container) return;
+        
+        const questionNum = parseInt(container.dataset.question);
+        
+        // Establecer el atributo data-clicked para activar validación completa
+        button.setAttribute('data-clicked', 'true');
+        
+        // Forzar validación
+        if (!validateQuestion(questionNum)) {
+            console.log(`Validación falló en la pregunta ${questionNum}`);
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Eliminar el atributo después de un tiempo
+            setTimeout(() => {
+                button.removeAttribute('data-clicked');
+            }, 2000);
+            
+            return false;
+        }
+        
+        console.log(`Validación exitosa en la pregunta ${questionNum}`);
+        return true;
+    };
+    
+    // Aplicar el evento a todos los botones de continuar
+    document.querySelectorAll('.button-continue, .button-submit').forEach(button => {
+        // Remover cualquier evento existente (para evitar duplicados)
+        button.removeEventListener('click', validateButtonClick, { capture: true });
+        
+        // Añadir nuestro nuevo evento al inicio de los handlers
+        button.addEventListener('click', validateButtonClick, { capture: true });
+    });
+}
 
+// Función para mostrar la pantalla de finalización
 function showCompletionScreen() {
     // Ocultar el contenedor de preguntas actual
-    const currentQuestion = document.querySelector('.question-container.active');
-    if (currentQuestion) {
-        currentQuestion.classList.remove('active');
+    const currentQuestionContainer = document.querySelector('.question-container.active');
+    if (currentQuestionContainer) {
+        currentQuestionContainer.classList.remove('active');
     }
     
     // Mostrar la pantalla de finalización
@@ -76,47 +191,18 @@ function showCompletionScreen() {
         step.classList.add('completed');
     });
     
+    // Ocultar las flechas de navegación
+    const navArrows = document.querySelectorAll('.nav-arrows');
+    navArrows.forEach(nav => {
+        nav.style.display = 'none';
+    });
+    
     // Scroll hacia arriba para asegurar que la pantalla de finalización sea visible
     window.scrollTo({
         top: 0,
         behavior: 'smooth'
     });
 }
-
-// Asegurarse de que este código se ejecute cuando el documento esté listo
-document.addEventListener('DOMContentLoaded', function() {
-    // Buscar el botón de enviar
-    const submitButton = document.querySelector('.button-submit');
-    
-    // Añadir evento de clic al botón de enviar
-    if (submitButton) {
-        submitButton.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Aquí iría la validación final del formulario
-            const currentQuestionContainer = document.querySelector('.question-container.active');
-            const isValid = validateQuestionContainer(currentQuestionContainer);
-            
-            if (isValid) {
-                // Mostrar animación de carga en el botón
-                this.innerHTML = '<span>Procesando...</span><div class="button-loader"></div>';
-                this.disabled = true;
-                
-                // Simular envío de datos (en producción, aquí iría tu código para enviar datos al servidor)
-                setTimeout(() => {
-                    showCompletionScreen();
-                }, 1500);
-            }
-        });
-    }
-    
-    // Función para validar el contenedor de preguntas
-    function validateQuestionContainer(container) {
-        // Implementar la validación según tus necesidades
-        // Por ahora, simplemente retornamos true para demostración
-        return true;
-    }
-});
 
 // Función para guardar las respuestas
 function saveAnswers() {
@@ -141,3 +227,32 @@ function saveAnswers() {
     });
     */
 }
+
+// Asegurarse de que este código se ejecute cuando el documento esté listo
+document.addEventListener('DOMContentLoaded', function() {
+    // Buscar el botón de enviar
+    const submitButton = document.querySelector('.button-submit');
+    
+    // Añadir evento de clic al botón de enviar
+    if (submitButton) {
+        submitButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Validar usando nuestra función de validación
+            const questionNum = parseInt(this.closest('.question-container').dataset.question);
+            const isValid = validateQuestion(questionNum);
+            
+            if (isValid) {
+                // Mostrar animación de carga en el botón
+                this.innerHTML = '<span>Procesando...</span><div class="button-loader"></div>';
+                this.disabled = true;
+                
+                // Simular envío de datos (en producción, aquí iría tu código para enviar datos al servidor)
+                setTimeout(() => {
+                    saveAnswers(); // Guardar las respuestas
+                    showCompletionScreen();
+                }, 1500);
+            }
+        });
+    }
+});

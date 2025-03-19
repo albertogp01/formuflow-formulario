@@ -30,6 +30,12 @@ function showQuestion(num) {
         }
     });
     
+    // Primero volvemos al inicio de la página para que la nueva pregunta se vea desde arriba
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+    
     // Transición entre preguntas
     if (prev > 0) {
         const prevEl = document.querySelector(`[data-question="${prev}"]`);
@@ -104,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // Configurar listeners para opciones de radio
-    // Configurar listeners para opciones de radio
     document.querySelectorAll('.radio-option').forEach(option => {
         option.addEventListener('click', function() {
             const container = this.closest('.radio-options-container');
@@ -123,10 +128,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     targetField.style.display = showField ? 'block' : 'none';
                 }
             }
+            
+            // NUEVO: Ocultar mensaje de validación cuando se selecciona una opción
+            const parentItem = this.closest('.question-item');
+            if (parentItem) {
+                const validationMsg = parentItem.querySelector('.validation-message');
+                if (validationMsg) {
+                    validationMsg.classList.remove('visible');
+                }
+            }
         });
     });
     
-    // Configurar listeners para opciones regulares (arreglar problema de selección)
+    // Configurar listeners para opciones regulares
     document.querySelectorAll('.option-item').forEach(option => {
         option.addEventListener('click', function() {
             const container = this.closest('.options-container');
@@ -138,6 +152,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Guardar el valor seleccionado
             if (this.dataset.field && this.dataset.value) {
                 answers[this.dataset.field] = this.dataset.value;
+            }
+            
+            // NUEVO: Ocultar mensaje de validación también para option-item
+            const parentItem = this.closest('.question-item');
+            if (parentItem) {
+                const validationMsg = parentItem.querySelector('.validation-message');
+                if (validationMsg) {
+                    validationMsg.classList.remove('visible');
+                }
             }
         });
     });
@@ -153,6 +176,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const num = parseInt(this.closest('.question-container').dataset.question);
             if (validateQuestion(num)) {
                 showQuestion(num + 1);
+            } else {
+                // La validación falló pero no ocultamos el botón, simplemente no avanzamos
+                setTimeout(() => {
+                    this.removeAttribute('data-clicked');
+                }, 2000);
             }
         });
     });
@@ -197,6 +225,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveAnswers();
                 navigationInProgress = false;
             }, 500);
+        } else {
+            // La validación falló pero no ocultamos el botón
+            setTimeout(() => {
+                this.removeAttribute('data-clicked');
+            }, 2000);
         }
     });
 
@@ -211,12 +244,32 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.nav-next').addEventListener('click', function() {
         if (navigationInProgress) return;
         if (!this.classList.contains('disabled') && currentQuestion < 4) {
+            // Marcar el botón continuar de la página actual como clickeado
+            const continueButton = document.querySelector(`[data-question="${currentQuestion}"] .button-continue`);
+            if (continueButton) {
+                continueButton.setAttribute('data-clicked', 'true');
+            }
+            
             if (validateQuestion(currentQuestion)) {
                 showQuestion(currentQuestion + 1);
+            } else if (continueButton) {
+                setTimeout(() => {
+                    continueButton.removeAttribute('data-clicked');
+                }, 2000);
             }
         } else if (currentQuestion === 4) {
+            // Marcar el botón submit como clickeado
+            const submitButton = document.querySelector(`[data-question="${currentQuestion}"] .button-submit`);
+            if (submitButton) {
+                submitButton.setAttribute('data-clicked', 'true');
+            }
+            
             if (validateQuestion(currentQuestion)) {
-                document.querySelector('.button-submit').click();
+                submitButton.click();
+            } else if (submitButton) {
+                setTimeout(() => {
+                    submitButton.removeAttribute('data-clicked');
+                }, 2000);
             }
         }
     });
@@ -224,21 +277,57 @@ document.addEventListener('DOMContentLoaded', () => {
     // Navegación por teclado
     window.addEventListener('keydown', e => {
         if (currentQuestion === 0 || navigationInProgress) return;
+        
         if (e.key === 'Enter' && !e.shiftKey) {
-            if (currentQuestion < 4) {
+            e.preventDefault(); // Prevenir comportamiento por defecto del Enter
+            
+            // Simular un clic en el botón Continuar o Submit
+            const currentContainer = document.querySelector(`[data-question="${currentQuestion}"]`);
+            const continueButton = currentContainer.querySelector('.button-continue');
+            const submitButton = currentContainer.querySelector('.button-submit');
+            
+            if (continueButton) {
+                // Marcar el botón como clickeado para activar la validación completa
+                continueButton.setAttribute('data-clicked', 'true');
+                
+                // Solo avanzamos si la validación es correcta
                 if (validateQuestion(currentQuestion)) {
                     showQuestion(currentQuestion + 1);
+                } else {
+                    setTimeout(() => {
+                        continueButton.removeAttribute('data-clicked');
+                    }, 2000);
                 }
-            } else {
+            } else if (submitButton && currentQuestion === 4) {
+                // Marcar el botón como clickeado para activar la validación completa
+                submitButton.setAttribute('data-clicked', 'true');
+                
+                // Solo enviamos si la validación es correcta
                 if (validateQuestion(currentQuestion)) {
-                    document.querySelector('.button-submit').click();
+                    submitButton.click();
+                } else {
+                    setTimeout(() => {
+                        submitButton.removeAttribute('data-clicked');
+                    }, 2000);
                 }
             }
         } else if (e.key === 'ArrowLeft' && currentQuestion > 1) {
             showQuestion(currentQuestion - 1);
         } else if (e.key === 'ArrowRight' && currentQuestion < 4) {
-            if (validateQuestion(currentQuestion)) {
-                showQuestion(currentQuestion + 1);
+            // Para las flechas también deberíamos validar
+            const currentContainer = document.querySelector(`[data-question="${currentQuestion}"]`);
+            const continueButton = currentContainer.querySelector('.button-continue');
+            
+            if (continueButton) {
+                continueButton.setAttribute('data-clicked', 'true');
+                
+                if (validateQuestion(currentQuestion)) {
+                    showQuestion(currentQuestion + 1);
+                } else {
+                    setTimeout(() => {
+                        continueButton.removeAttribute('data-clicked');
+                    }, 2000);
+                }
             }
         }
     });

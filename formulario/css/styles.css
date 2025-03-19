@@ -779,7 +779,6 @@ body {
 .intro-logo {
     width: 180px;
     height: auto;
-    margin-bottom: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -808,7 +807,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    background: linear-gradient(90deg, var(--primary-color), var(--primary-hover));
+    background: linear-gradient(90deg, black, #333);
     background-size: 200% 100%;
     animation: shimmer 2s linear infinite;
     border-radius: 4px;
@@ -1133,6 +1132,27 @@ body {
     animation-delay: 0.6s;
 }
 
+/* Añadir este CSS al archivo styles.css */
+
+/* Estilo para el mensaje de validación de rango */
+.range-validation {
+    color: var(--error-color);
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 8px;
+    display: none;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: var(--transition-normal);
+}
+
+.range-validation.visible {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    animation: errorSlideIn 0.4s ease forwards;
+}
+
 @keyframes fadeUpStaggered {
     from {
         opacity: 0;
@@ -1174,4 +1194,6 @@ body {
         height: 80px;
         font-size: 36px;
     }
+
+    
 }
