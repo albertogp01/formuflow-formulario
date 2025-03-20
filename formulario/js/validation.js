@@ -11,6 +11,9 @@ function validateQuestion(num) {
     let valid = true;
     let firstErrorElement = null;
     
+    // Detectar si es un dispositivo móvil para ajustes especiales
+    const isMobile = window.innerWidth < 768;
+    
     // VALIDACIONES ESPECÍFICAS POR SECCIÓN
     
     // Sección 1: Datos personales (nombre, género, email)
@@ -281,6 +284,7 @@ function validateQuestion(num) {
     }
     
     // Sección 4: Ejercicios y Preferencias (tipo de entrenamiento)
+    // Sección 4: Ejercicios y Preferencias (tipo de entrenamiento)
     else if (num === 4) {
         console.log("Validando sección 4 - Ejercicios y Preferencias");
         
@@ -326,9 +330,41 @@ function validateQuestion(num) {
     // Recolectar todas las respuestas adicionales
     collectAdditionalAnswers(container);
     
-    // Si encontramos un error, desplazamos a ese elemento
+    // Si encontramos un error, desplazamos a ese elemento con scroll mejorado
     if (!valid && firstErrorElement) {
-        firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // En móvil, necesitamos un offset diferente para no ocultar el elemento bajo la barra de navegación
+        const offset = isMobile ? 80 : 120;
+        
+        // Pequeño retraso para asegurar que las animaciones se completen
+        setTimeout(() => {
+            // Usar función de scroll con animación de flash
+            scrollToElement(firstErrorElement, offset);
+            
+            // En móvil, resaltar visualmente el error para mejor identificación
+            if (isMobile) {
+                // Encontrar el mensaje de error dentro del elemento
+                const errorMessage = firstErrorElement.querySelector('.validation-message.visible, .number-validation.visible, .range-validation.visible, .email-validation.visible');
+                
+                if (errorMessage) {
+                    // Hacer un pulso adicional en el mensaje de error para llamar la atención
+                    errorMessage.classList.add('pulse-error');
+                    setTimeout(() => {
+                        errorMessage.classList.remove('pulse-error');
+                    }, 1000);
+                }
+                
+                // Buscar input con error si existe
+                const errorInput = firstErrorElement.querySelector('input.error, textarea.error');
+                if (errorInput) {
+                    // Intentar hacer focus en el input con error (mejora la usabilidad)
+                    try {
+                        errorInput.focus();
+                    } catch (e) {
+                        console.log("No se pudo hacer focus en el input");
+                    }
+                }
+            }
+        }, 100);
     }
     
     console.log(`Validación de sección ${num}: ${valid ? 'EXITOSA' : 'FALLIDA'}`);
@@ -357,8 +393,102 @@ function collectAdditionalAnswers(container) {
     });
 }
 
+// Función para desplazamiento suave hacia elementos con error
+function scrollToElement(element, offset = 100) {
+    // Obtener posición actual del scroll
+    const currentScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Obtener la posición del elemento
+    const rect = element.getBoundingClientRect();
+    const elementTop = rect.top + currentScrollPosition;
+    
+    // Calcular la posición ideal de scroll (con offset)
+    const scrollPosition = elementTop - offset;
+    
+    // Ejecutar el scroll
+    window.scrollTo({
+        top: scrollPosition,
+        behavior: 'smooth'
+    });
+    
+    // Añadir efecto visual para indicar dónde está el error
+    element.classList.add('flash-error');
+    
+    // Quitar el efecto visual después de la animación
+    setTimeout(() => {
+        element.classList.remove('flash-error');
+    }, 1500);
+    
+    // Verificar si el elemento tiene un input o textarea con error
+    const errorInput = element.querySelector('input.error, textarea.error');
+    if (errorInput) {
+        // Esperar a que el scroll termine antes de intentar hacer focus
+        setTimeout(() => {
+            try {
+                errorInput.focus();
+            } catch (e) {
+                console.log("No se pudo hacer focus en el input");
+            }
+        }, 800);
+    }
+}
+
 // Limpiar mensajes de error cuando se selecciona una opción
 document.addEventListener('DOMContentLoaded', () => {
+    // Detectar si estamos en un dispositivo móvil
+    const isMobile = window.innerWidth < 768;
+    window.wasMobile = isMobile;
+    
+    // En móvil, agregar una clase al body para estilos específicos
+    if (isMobile) {
+        document.body.classList.add('mobile-device');
+    }
+    
+    // Agregar estilos CSS para animación de error
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes flashError {
+            0% { background-color: rgba(255, 200, 200, 0); }
+            30% { background-color: rgba(255, 200, 200, 0.7); }
+            100% { background-color: rgba(255, 200, 200, 0); }
+        }
+
+        .flash-error {
+            animation: flashError 1.5s ease-out;
+        }
+        
+        @keyframes pulseError {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse-error {
+            animation: pulseError 0.5s ease-in-out;
+        }
+        
+        /* Mejorar la visibilidad de los mensajes de error en móvil */
+        @media (max-width: 767px) {
+            .validation-message.visible,
+            .number-validation.visible,
+            .email-validation.visible,
+            .range-validation.visible {
+                padding: 12px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+                font-weight: 500;
+                border-radius: 4px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            /* Mejorar tamaño de elementos táctiles */
+            .radio-option, .option-item {
+                min-height: 44px;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
     // Para opciones de radio
     document.querySelectorAll('.radio-option').forEach(option => {
         option.addEventListener('click', function() {
@@ -375,6 +505,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (validationMsg) {
                     validationMsg.classList.remove('visible');
                 }
+                // También quitar cualquier resaltado de error
+                parentItem.classList.remove('flash-error');
             }
             
             // Manejar campos condicionales
@@ -406,6 +538,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (validationMsg) {
                     validationMsg.classList.remove('visible');
                 }
+                // También quitar cualquier resaltado de error
+                parentItem.classList.remove('flash-error');
             }
             
             // Guardar el valor seleccionado
@@ -415,10 +549,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    // Para campos de texto
+    // Para campos de texto - optimizado para móvil
     document.querySelectorAll('.question-input').forEach(input => {
+        // Al escribir, ocultar mensaje de error
         input.addEventListener('input', function() {
             const questionItem = this.closest('.question-item');
+            if (!questionItem) return;
+            
+            // Ocultar todos los tipos de mensajes
             const validationMsg = questionItem.querySelector('.validation-message');
             const numberValidationMsg = questionItem.querySelector('.number-validation');
             const emailValidationMsg = questionItem.querySelector('.email-validation');
@@ -434,6 +572,45 @@ document.addEventListener('DOMContentLoaded', () => {
             if (this.value.trim() !== '') {
                 this.classList.remove('error');
             }
+            
+            // Quitar resaltado de error
+            questionItem.classList.remove('flash-error');
         });
+        
+        // En móvil, mejorar experiencia con teclado
+        if (isMobile) {
+            // Al enfocar un input, asegurar que sea visible sobre el teclado
+            input.addEventListener('focus', function() {
+                // Pequeño retraso para el teclado
+                setTimeout(() => {
+                    const rect = this.getBoundingClientRect();
+                    // Verificar si el elemento está en la parte inferior de la pantalla
+                    if (rect.bottom > window.innerHeight * 0.7) {
+                        // Scroll para que el elemento quede visible por encima del teclado
+                        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                        const targetScroll = currentScroll + rect.top - 120;
+                        window.scrollTo({
+                            top: targetScroll,
+                            behavior: 'smooth'
+                        });
+                    }
+                }, 300);
+            });
+        }
+    });
+    
+    // Detectar cambios de orientación en móviles
+    window.addEventListener('orientationchange', function() {
+        // Pequeño delay para permitir que la orientación se complete
+        setTimeout(() => {
+            const wasMobile = window.wasMobile;
+            const isMobile = window.innerWidth < 768;
+            window.wasMobile = isMobile;
+            
+            if (wasMobile !== isMobile) {
+                // Cambio entre móvil y desktop
+                document.body.classList.toggle('mobile-device', isMobile);
+            }
+        }, 300);
     });
 });

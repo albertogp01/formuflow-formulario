@@ -292,108 +292,128 @@ body {
 }
 
 .input-suffix {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--text-light);
-    font-size: 14px;
-    pointer-events: none;
+    position: absolute !important;
+    right: 12px !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    color: #718096 !important;
+    font-size: 14px !important;
+    pointer-events: none !important;
 }
 
 .question-input {
-    width: 100%;
-    padding: 12px 10px;
-    font-size: 16px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    background-color: #fff;
-    outline: none;
-    transition: var(--transition-normal);
+    width: 100% !important;
+    padding: 12px 10px !important;
+    font-size: 16px !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    background-color: white !important;
+    color: var(--text-color) !important;
+    outline: none !important;
+    transition: all 0.3s ease !important;
 }
 
 .question-input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+    border-color: #3182CE !important;
+    box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2) !important;
 }
 
 .question-input.error {
-    border-color: var(--error-color);
+    border-color: var(--error-color) !important;
 }
 
 .question-input.textarea {
-    min-height: 100px;
-    resize: vertical;
+    min-height: 100px !important;
+    resize: vertical !important;
 }
 
 /* Estilos para opciones de selección */
-.options-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 5px;
-    width: 100%;
+.options-container, .radio-options-container, .checkbox-options-container {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    margin-bottom: 16px !important;
+    width: 100% !important;
 }
 
 .option-item {
-    padding: 16px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--radius-md);
-    cursor: pointer;
-    transition: var(--transition-normal);
-    display: flex;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    background-color: white;
+    padding: 16px !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: var(--radius-md) !important;
+    cursor: pointer !important;
+    transition: var(--transition-normal) !important;
+    display: flex !important;
+    align-items: center !important;
+    position: relative !important;
+    overflow: hidden !important;
+    background-color: white !important;
 }
 
 .option-item:hover {
-    border-color: #bbb;
-    background-color: var(--background-hover);
+    border-color: #bbb !important;
+    background-color: var(--background-hover) !important;
 }
 
 .option-item.selected {
-    border-color: var(--primary-color);
-    background-color: rgba(49, 130, 206, 0.05);
+    border-color: var(--primary-color) !important;
+    background-color: rgba(49, 130, 206, 0.05) !important;
 }
 
 .option-content {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    display: flex !important;
+    flex-direction: column !important;
+    flex-grow: 1 !important;
 }
 
 .option-description {
-    font-size: 14px;
-    color: var(--text-light);
-    margin-top: 5px;
-    display: none;
+    font-size: 14px !important;
+    color: var(--text-light) !important;
+    margin-top: 5px !important;
+    display: none !important;
 }
 
 .option-item.selected .option-description {
-    display: block;
-    animation: fadeIn 0.5s forwards;
+    display: block !important;
+    animation: fadeIn 0.5s forwards !important;
 }
 
 .option-radio {
-    width: 20px;
-    height: 20px;
-    border: 2px solid #bbb;
-    border-radius: 50%;
-    margin-right: 15px;
-    position: relative;
-    flex-shrink: 0;
-    transition: var(--transition-normal);
+    width: 20px !important;
+    height: 20px !important;
+    border: 2px solid #CBD5E0 !important;
+    border-radius: 50% !important;
+    margin-right: 15px !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+    background-color: white !important;
+    transition: all 0.3s ease !important;
 }
 
 .option-item:hover .option-radio {
-    border-color: #999;
+    border-color: #A0AEC0 !important;
 }
 
 .option-item.selected .option-radio {
-    border-color: var(--primary-color);
-    border-width: 6px;
+    border-color: #3182CE !important; /* Color azul exacto */
+    border-width: 6px !important;
+}
+
+.option-item.selected .option-radio:after {
+    content: '' !important;
+    position: absolute !important;
+    width: 6px !important;
+    height: 6px !important;
+    background-color: white !important;
+    border-radius: 50% !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+}
+
+.option-label {
+    font-size: 15px !important;
+    font-weight: 500 !important;
+    line-height: 1.4 !important;
 }
 
 .option-item.selected .option-radio:after {
@@ -576,81 +596,130 @@ body {
 
 /* Botones de navegación */
 .navigation-buttons {
-    margin-top: 30px;
-    display: flex;
-    gap: 15px;
-    position: relative;
-    transition: var(--transition-normal);
-    justify-content: flex-end;
+    margin-top: 30px !important;
+    display: flex !important;
+    gap: 15px !important;
+    position: relative !important;
+    transition: all 0.3s ease !important; /* var(--transition-normal) */
+    justify-content: flex-end !important;
 }
 
 .nav-button {
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 600;
-    border: none;
-    border-radius: var(--radius-full);
-    cursor: pointer;
-    transition: var(--transition-normal);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    box-shadow: var(--shadow-md);
-    position: relative;
-    overflow: hidden;
-    background-color: var(--primary-color);
-    color: white;
-    z-index: 10;
+    padding: 12px 24px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 9999px !important; /* var(--radius-full) */
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important; /* var(--shadow-md) */
+    position: relative !important;
+    overflow: hidden !important;
+    background-color: #3182CE !important; /* var(--primary-color) */
+    color: white !important;
+    z-index: 10 !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 44px !important;
+    max-width: none !important;
+    max-height: none !important;
 }
 
 .nav-button span {
-    position: relative;
-    z-index: 5;
-    font-weight: 600;
+    position: relative !important;
+    z-index: 5 !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    line-height: 1.4 !important;
 }
 
 .nav-button svg {
-    position: relative;
-    z-index: 5;
-    color: currentColor;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 2px;
+    position: relative !important;
+    z-index: 5 !important;
+    color: currentColor !important;
+    stroke: currentColor !important;
+    fill: none !important;
+    stroke-width: 2px !important;
+    width: 16px !important;
+    height: 16px !important;
+    margin-left: 8px !important;
 }
 
 .nav-button:hover {
-    transform: translateY(-3px);
-    background-color: var(--primary-hover);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px) !important;
+    background-color: #2C5282 !important; /* var(--primary-hover) */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important; /* var(--shadow-lg) */
 }
 
 .nav-button:active {
-    transform: translateY(1px);
-    box-shadow: var(--shadow-sm);
+    transform: translateY(1px) !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; /* var(--shadow-sm) */
 }
 
 .nav-button.hidden {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transform: translateY(20px) !important;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease !important;
 }
 
 .nav-button.visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease !important;
 }
 
 .button-back {
-    background-color: var(--secondary-color);
-    color: var(--text-color);
-    box-shadow: var(--shadow-sm);
+    background-color: #f5f5f7 !important; /* var(--secondary-color) */
+    color: #333 !important; /* var(--text-color) */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important; /* var(--shadow-sm) */
 }
 
 .button-back:hover {
-    background-color: #e5e5e5;
+    background-color: #e5e5e5 !important;
+}
+
+/* Para asegurar que el botón Continuar tenga los estilos correctos */
+button[type="submit"], 
+button:contains("Continuar") {
+    padding: 12px 24px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 9999px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    background-color: #3182CE !important;
+    color: white !important;
+    z-index: 10 !important;
+    width: auto !important;
+    height: auto !important;
+    min-height: 44px !important;
+    max-width: none !important;
+    max-height: none !important;
+}
+
+button[type="submit"]:hover, 
+button:contains("Continuar"):hover {
+    transform: translateY(-3px) !important;
+    background-color: #2C5282 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+button[type="submit"]:active, 
+button:contains("Continuar"):active {
+    transform: translateY(1px) !important;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
 }
 
 /* Flechas de navegación */
@@ -783,6 +852,7 @@ body {
     justify-content: center;
     align-items: center;
     animation: pulse 2s infinite;
+    margin-bottom: 0 !important
 }
 
 @keyframes pulse {
@@ -1194,6 +1264,109 @@ body {
         height: 80px;
         font-size: 36px;
     }
-
     
+
+    /* PARA MOVIL */
+
+/* Animación para resaltar elementos con error */
+@keyframes flashError {
+    0% { background-color: rgba(255, 200, 200, 0); }
+    30% { background-color: rgba(255, 200, 200, 0.7); }
+    100% { background-color: rgba(255, 200, 200, 0); }
+}
+
+.flash-error {
+    animation: flashError 1.5s ease-out;
+}
+
+/* Ajustes móviles generales */
+@media (max-width: 767px) {
+    /* Eliminar animations y transitions que pueden afectar el scroll */
+    .question-container {
+        transition: none !important;
+        transform: none !important;
+        will-change: auto !important;
+        animation: none !important;
+    }
+    
+    .animate-out-left, .animate-out-right, 
+    .animate-in-left, .animate-in-right {
+        animation: none !important;
+        transition: none !important;
+    }
+    
+    /* Eliminar scroll personalizado y efectos que afectan el rendimiento */
+    .container, 
+    .question-container,
+    .questions-grid,
+    .question-item {
+        overflow: visible !important;
+        transform: none !important;
+        transition: opacity 0.2s ease !important;
+        will-change: opacity !important;
+    }
+    
+    /* Simplificar visualmente las transiciones para mejor rendimiento */
+    .question-container:not(.active) {
+        display: none !important;
+    }
+    
+    .question-container.active {
+        display: block !important;
+        opacity: 1 !important;
+    }
+    
+    /* Corregir flash-error para que no interfiera con scroll */
+    .flash-error {
+        animation: simpleFlash 1s ease-out !important;
+    }
+    
+    @keyframes simpleFlash {
+        0% { background-color: rgba(255, 200, 200, 0.7); }
+        100% { background-color: transparent; }
+    }
+    
+    /* Arreglar altura de contenedores */
+    .container {
+        height: auto !important;
+        min-height: 100vh;
+    }
+    
+    /* Evitar que elementos fijos interfieran con scroll */
+    .progress-container {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        background: #fff;
+    }
+    
+    /* Mejorar comportamiento de elementos táctiles */
+    input, 
+    textarea,
+    .option-item,
+    .radio-option,
+    .checkbox-option,
+    .nav-button {
+        -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+    }
+    
+    /* Permitir animaciones solo para elementos pequeños y no críticos */
+    .validation-message.visible {
+        transition: opacity 0.2s ease !important;
+    }
+    
+    /* Corregir problema específico con posicionamientos fixed */
+    .nav-arrows {
+        position: fixed;
+        bottom: 15px;
+        right: 15px;
+        z-index: 100;
+        pointer-events: none; /* Permite scroll a través */
+    }
+    
+    .nav-arrow {
+        pointer-events: auto; /* Permite interactuar con este elemento */
+    }
+}
 }
