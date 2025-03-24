@@ -66,22 +66,21 @@ add_action('wp_head', 'formuflow_add_critical_css', 1);
 // Registrar los assets (CSS y JS)
 function formuflow_enqueue_assets() {
     // Versión para invalidar cachés
-    $version = FORMUFLOW_VERSION;
+    $version = FORMUFLOW_VERSION . '.' . time(); // Añadir timestamp para forzar recarga
     
-    // Registrar estilos
+    // Registrar estilos con versión dinámica
     wp_enqueue_style('formuflow-styles', plugin_dir_url(__FILE__) . 'formulario/css/styles.css', array(), $version);
     
-    // Registrar scripts
+    // Registrar scripts con versión dinámica
     wp_enqueue_script('formuflow-intro', plugin_dir_url(__FILE__) . 'formulario/js/intro.js', array('jquery'), $version, true);
     wp_enqueue_script('formuflow-confetti', plugin_dir_url(__FILE__) . 'formulario/js/confetti.js', array('jquery'), $version, true);
     wp_enqueue_script('formuflow-main', plugin_dir_url(__FILE__) . 'formulario/js/main.js', array('jquery'), $version, true);
     wp_enqueue_script('formuflow-navigation', plugin_dir_url(__FILE__) . 'formulario/js/navigation.js', array('jquery'), $version, true);
     wp_enqueue_script('formuflow-validation', plugin_dir_url(__FILE__) . 'formulario/js/validation.js', array('jquery'), $version, true);
-    wp_enqueue_script('formuflow-numeric-validation', plugin_dir_url(__FILE__) . 'formulario/js/numeric-validation-fix.js', array('jquery'), $version, true);
-    wp_enqueue_script('formuflow-required-marks', plugin_dir_url(__FILE__) . 'formulario/js/required-marks-fix.js', array('jquery'), $version, true);
+    
+    // CORREGIDO: Usar el nombre de archivo correcto sin guion
     wp_enqueue_script('formuflow-api', plugin_dir_url(__FILE__) . 'formulario/js/formapi.js', array('jquery'), $version, true);
-    wp_enqueue_style('formuflow-validation-fixes', plugin_dir_url(__FILE__) . 'formulario/css/validation-fixes.css', array(), $version);
-    wp_enqueue_script('formuflow-mobile-fixes', plugin_dir_url(__FILE__) . 'formulario/js/form-mobile-fixes.js', array('jquery', 'formuflow-validation', 'formuflow-navigation'), $version, true);
+    
     // Pasar variables al frontend - CONFIGURACIÓN ACTUALIZADA
     wp_localize_script('formuflow-api', 'formuflowConfig', array(
         'apiUrl' => FORMUFLOW_API_URL,

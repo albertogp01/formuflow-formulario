@@ -251,6 +251,20 @@
   // Función de inicio
   function init() {
     console.log('[Formuflow] Inicializando módulo de API...');
+
+    // Forzar recarga en caso de caché desactualizada
+    const cacheVersion = window.formuflowConfig?.version || '';
+    if (localStorage.getItem('formuflow_version') !== cacheVersion) {
+      localStorage.setItem('formuflow_version', cacheVersion);
+      
+      // Si estamos recargando, no continuar con la inicialización
+      if (sessionStorage.getItem('formuflow_init') !== 'true') {
+        sessionStorage.setItem('formuflow_init', 'true');
+        console.log('[Formuflow] Nueva versión detectada, forzando recarga');
+        window.location.reload(true);
+        return;
+      }
+    }
     
     // Comprobar si estamos en la página del formulario
     const form = document.querySelector('.question-container');

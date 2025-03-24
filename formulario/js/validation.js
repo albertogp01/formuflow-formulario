@@ -12,7 +12,8 @@ function validateQuestion(num) {
     let firstErrorElement = null;
     
     // Detectar si es un dispositivo móvil para ajustes especiales
-    const isMobile = window.innerWidth < 768;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    console.log(`Validando en dispositivo: ${isMobile ? 'móvil' : 'escritorio'}`);
     
     // VALIDACIONES ESPECÍFICAS POR SECCIÓN
     
@@ -37,6 +38,7 @@ function validateQuestion(num) {
                 if (numberValidationMsg) {
                     numberValidationMsg.classList.add('visible');
                 }
+                valid = false;
                 if (!firstErrorElement) firstErrorElement = nombreInput.closest('.question-item');
             } else {
                 nombreInput.classList.remove('error');
@@ -55,6 +57,7 @@ function validateQuestion(num) {
                     if (numberValidationMsg) {
                         numberValidationMsg.classList.add('visible');
                     }
+                    valid = false;
                     if (!firstErrorElement) firstErrorElement = edadInput.closest('.question-item');
                 } else if (edadInput.dataset.min && edadInput.dataset.max && 
                           (parseInt(edad) < parseInt(edadInput.dataset.min) || 
@@ -64,6 +67,7 @@ function validateQuestion(num) {
                     if (rangeValidationMsg) {
                         rangeValidationMsg.classList.add('visible');
                     }
+                    valid = false;
                     if (!firstErrorElement) firstErrorElement = edadInput.closest('.question-item');
                 } else {
                     edadInput.classList.remove('error');
@@ -83,6 +87,7 @@ function validateQuestion(num) {
                     if (numberValidationMsg) {
                         numberValidationMsg.classList.add('visible');
                     }
+                    valid = false;
                     if (!firstErrorElement) firstErrorElement = pesoInput.closest('.question-item');
                 } else if (pesoInput.dataset.min && pesoInput.dataset.max && 
                           (parseInt(peso) < parseInt(pesoInput.dataset.min) || 
@@ -92,6 +97,7 @@ function validateQuestion(num) {
                     if (rangeValidationMsg) {
                         rangeValidationMsg.classList.add('visible');
                     }
+                    valid = false;
                     if (!firstErrorElement) firstErrorElement = pesoInput.closest('.question-item');
                 } else {
                     pesoInput.classList.remove('error');
@@ -111,6 +117,7 @@ function validateQuestion(num) {
                     if (numberValidationMsg) {
                         numberValidationMsg.classList.add('visible');
                     }
+                    valid = false;
                     if (!firstErrorElement) firstErrorElement = alturaInput.closest('.question-item');
                 } else if (alturaInput.dataset.min && alturaInput.dataset.max && 
                           (parseInt(altura) < parseInt(alturaInput.dataset.min) || 
@@ -120,6 +127,7 @@ function validateQuestion(num) {
                     if (rangeValidationMsg) {
                         rangeValidationMsg.classList.add('visible');
                     }
+                    valid = false;
                     if (!firstErrorElement) firstErrorElement = alturaInput.closest('.question-item');
                 } else {
                     alturaInput.classList.remove('error');
@@ -284,7 +292,6 @@ function validateQuestion(num) {
     }
     
     // Sección 4: Ejercicios y Preferencias (tipo de entrenamiento)
-    // Sección 4: Ejercicios y Preferencias (tipo de entrenamiento)
     else if (num === 4) {
         console.log("Validando sección 4 - Ejercicios y Preferencias");
         
@@ -433,10 +440,19 @@ function scrollToElement(element, offset = 100) {
     }
 }
 
-// Limpiar mensajes de error cuando se selecciona una opción
+// Inicializar validación y configurar eventos específicos para móvil
 document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar variable global para respuestas si no existe
+    if (typeof answers === 'undefined') {
+        window.answers = {};
+    }
+    
+    console.log('Inicializando módulo de validación');
+    
     // Detectar si estamos en un dispositivo móvil
-    const isMobile = window.innerWidth < 768;
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    console.log('¿Dispositivo móvil detectado?', isMobile ? 'Sí' : 'No');
+    
     window.wasMobile = isMobile;
     
     // En móvil, agregar una clase al body para estilos específicos
@@ -485,51 +501,49 @@ document.addEventListener('DOMContentLoaded', () => {
             .radio-option, .option-item {
                 min-height: 44px;
             }
+            
+            /* Aumentar el tamaño del botón para móviles */
+            .button-continue, .button-back, .button-submit {
+                min-height: 44px;
+                font-size: 16px;
+            }
         }
     `;
     document.head.appendChild(style);
     
-    // Para opciones de radio
-    document.querySelectorAll('.radio-option').forEach(option => {
-        option.addEventListener('click', function() {
-            const container = this.closest('.radio-options-container');
-            container.querySelectorAll('.radio-option').forEach(item => {
-                item.classList.remove('selected');
+    // Configurar eventos específicos para móvil
+    if (isMobile) {
+        console.log('Aplicando configuración específica para móviles en validación');
+        
+        // Función para configurar eventos táctiles para validación
+        const setupMobileValidation = () => {
+            // Para opciones de radio
+            document.querySelectorAll('.radio-option').forEach(option => {
+                // Garantizar que no hay eventos duplicados
+                option.removeEventListener('touchend', handleRadioTouchForValidation);
+                option.addEventListener('touchend', handleRadioTouchForValidation);
             });
-            this.classList.add('selected');
             
-            // Ocultar mensaje de error
-            const parentItem = this.closest('.question-item');
-            if (parentItem) {
-                const validationMsg = parentItem.querySelector('.validation-message');
-                if (validationMsg) {
-                    validationMsg.classList.remove('visible');
-                }
-                // También quitar cualquier resaltado de error
-                parentItem.classList.remove('flash-error');
-            }
+            // Para opciones normales
+            document.querySelectorAll('.option-item').forEach(option => {
+                option.removeEventListener('touchend', handleOptionTouchForValidation);
+                option.addEventListener('touchend', handleOptionTouchForValidation);
+            });
             
-            // Manejar campos condicionales
-            const targetId = this.dataset.toggle;
-            if (targetId) {
-                const targetField = document.getElementById(targetId);
-                const showField = this.dataset.value === 'Sí';
+            // Para campos de texto
+            document.querySelectorAll('.question-input').forEach(input => {
+                input.removeEventListener('input', handleInputForValidation);
+                input.addEventListener('input', handleInputForValidation);
                 
-                if (targetField) {
-                    targetField.style.display = showField ? 'block' : 'none';
-                }
-            }
-        });
-    });
-    
-    // Para opciones normales
-    document.querySelectorAll('.option-item').forEach(option => {
-        option.addEventListener('click', function() {
-            const container = this.closest('.options-container');
-            container.querySelectorAll('.option-item').forEach(item => {
-                item.classList.remove('selected');
+                // Mejorar experiencia con el teclado móvil
+                input.removeEventListener('focus', handleInputFocusOnMobile);
+                input.addEventListener('focus', handleInputFocusOnMobile);
             });
-            this.classList.add('selected');
+        };
+        
+        // Handler para opciones de radio en móvil
+        function handleRadioTouchForValidation(e) {
+            // No prevenir el comportamiento predeterminado aquí para permitir la funcionalidad normal
             
             // Ocultar mensaje de error
             const parentItem = this.closest('.question-item');
@@ -541,18 +555,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 // También quitar cualquier resaltado de error
                 parentItem.classList.remove('flash-error');
             }
+        }
+        
+        // Handler para opciones normales en móvil
+        function handleOptionTouchForValidation(e) {
+            // No prevenir el comportamiento predeterminado aquí para permitir la funcionalidad normal
             
-            // Guardar el valor seleccionado
-            if (this.dataset.field && this.dataset.value) {
-                answers[this.dataset.field] = this.dataset.value;
+            // Ocultar mensaje de error
+            const parentItem = this.closest('.question-item');
+            if (parentItem) {
+                const validationMsg = parentItem.querySelector('.validation-message');
+                if (validationMsg) {
+                    validationMsg.classList.remove('visible');
+                }
+                // También quitar cualquier resaltado de error
+                parentItem.classList.remove('flash-error');
             }
-        });
-    });
-    
-    // Para campos de texto - optimizado para móvil
-    document.querySelectorAll('.question-input').forEach(input => {
-        // Al escribir, ocultar mensaje de error
-        input.addEventListener('input', function() {
+        }
+        
+        // Handler para campos de texto en móvil
+        function handleInputForValidation() {
             const questionItem = this.closest('.question-item');
             if (!questionItem) return;
             
@@ -575,41 +597,121 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Quitar resaltado de error
             questionItem.classList.remove('flash-error');
+        }
+        
+        // Handler para focus en inputs en móvil
+        function handleInputFocusOnMobile() {
+            // Pequeño retraso para el teclado
+            setTimeout(() => {
+                const rect = this.getBoundingClientRect();
+                // Verificar si el elemento está en la parte inferior de la pantalla
+                if (rect.bottom > window.innerHeight * 0.7) {
+                    // Scroll para que el elemento quede visible por encima del teclado
+                    const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                    const targetScroll = currentScroll + rect.top - 120;
+                    window.scrollTo({
+                        top: targetScroll,
+                        behavior: 'smooth'
+                    });
+                }
+            }, 300);
+        }
+        
+        // Inicializar eventos táctiles en carga
+        setupMobileValidation();
+        
+        // Reconfigurar los eventos cada vez que cambia la página
+        const originalShowQuestion = window.showQuestion;
+        if (typeof originalShowQuestion === 'function') {
+            window.showQuestion = function(num) {
+                const result = originalShowQuestion(num);
+                setTimeout(setupMobileValidation, 500); // Reconfigurar después de la transición
+                return result;
+            };
+        }
+    } else {
+        // Configuración para navegadores de escritorio (mantenemos el código original)
+        
+        // Para opciones de radio
+        document.querySelectorAll('.radio-option').forEach(option => {
+            option.addEventListener('click', function() {
+                // Este evento es manejado por navigation.js, solo añadimos la limpieza de errores
+                // Ocultar mensaje de error
+                const parentItem = this.closest('.question-item');
+                if (parentItem) {
+                    const validationMsg = parentItem.querySelector('.validation-message');
+                    if (validationMsg) {
+                        validationMsg.classList.remove('visible');
+                    }
+                    // También quitar cualquier resaltado de error
+                    parentItem.classList.remove('flash-error');
+                }
+            });
         });
         
-        // En móvil, mejorar experiencia con teclado
-        if (isMobile) {
-            // Al enfocar un input, asegurar que sea visible sobre el teclado
-            input.addEventListener('focus', function() {
-                // Pequeño retraso para el teclado
-                setTimeout(() => {
-                    const rect = this.getBoundingClientRect();
-                    // Verificar si el elemento está en la parte inferior de la pantalla
-                    if (rect.bottom > window.innerHeight * 0.7) {
-                        // Scroll para que el elemento quede visible por encima del teclado
-                        const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-                        const targetScroll = currentScroll + rect.top - 120;
-                        window.scrollTo({
-                            top: targetScroll,
-                            behavior: 'smooth'
-                        });
+        // Para opciones normales
+        document.querySelectorAll('.option-item').forEach(option => {
+            option.addEventListener('click', function() {
+                // Este evento es manejado por navigation.js, solo añadimos la limpieza de errores
+                // Ocultar mensaje de error
+                const parentItem = this.closest('.question-item');
+                if (parentItem) {
+                    const validationMsg = parentItem.querySelector('.validation-message');
+                    if (validationMsg) {
+                        validationMsg.classList.remove('visible');
                     }
-                }, 300);
+                    // También quitar cualquier resaltado de error
+                    parentItem.classList.remove('flash-error');
+                }
             });
-        }
-    });
+        });
+        
+        // Para campos de texto
+        document.querySelectorAll('.question-input').forEach(input => {
+            // Al escribir, ocultar mensaje de error
+            input.addEventListener('input', function() {
+                const questionItem = this.closest('.question-item');
+                if (!questionItem) return;
+                
+                // Ocultar todos los tipos de mensajes
+                const validationMsg = questionItem.querySelector('.validation-message');
+                const numberValidationMsg = questionItem.querySelector('.number-validation');
+                const emailValidationMsg = questionItem.querySelector('.email-validation');
+                const rangeValidationMsg = questionItem.querySelector('.range-validation');
+                
+                // Ocultar todos los mensajes de error
+                if (validationMsg) validationMsg.classList.remove('visible');
+                if (numberValidationMsg) numberValidationMsg.classList.remove('visible');
+                if (emailValidationMsg) emailValidationMsg.classList.remove('visible');
+                if (rangeValidationMsg) rangeValidationMsg.classList.remove('visible');
+                
+                // Si el campo tiene valor, eliminar la clase de error
+                if (this.value.trim() !== '') {
+                    this.classList.remove('error');
+                }
+                
+                // Quitar resaltado de error
+                questionItem.classList.remove('flash-error');
+            });
+        });
+    }
     
     // Detectar cambios de orientación en móviles
     window.addEventListener('orientationchange', function() {
         // Pequeño delay para permitir que la orientación se complete
         setTimeout(() => {
             const wasMobile = window.wasMobile;
-            const isMobile = window.innerWidth < 768;
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
             window.wasMobile = isMobile;
             
             if (wasMobile !== isMobile) {
                 // Cambio entre móvil y desktop
                 document.body.classList.toggle('mobile-device', isMobile);
+                
+                // Recargar la página si cambia drásticamente el modo de visualización
+                if (confirm("Se ha detectado un cambio en la orientación del dispositivo. ¿Desea recargar la página para optimizar la experiencia?")) {
+                    window.location.reload();
+                }
             }
         }, 300);
     });
