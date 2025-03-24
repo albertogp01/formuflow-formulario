@@ -38,7 +38,8 @@ function showQuestion(num) {
         }
     });
     
-    // Primero volvemos al inicio de la página para que la nueva pregunta se vea desde arriba
+    // Importante: Primero volvemos al inicio de la página ANTES de cualquier transición
+    // Esto garantiza que el usuario vea la nueva sección desde arriba
     window.scrollTo({
         top: 0,
         behavior: 'smooth'
@@ -65,6 +66,12 @@ function showQuestion(num) {
                 prevEl.classList.remove('active', 'animate-out-left');
                 nextEl.classList.add('active', 'animate-in-right');
                 
+                // Asegurar que estamos al inicio de la página después de la transición también
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'auto'
+                });
+                
                 setTimeout(() => {
                     nextEl.classList.remove('animate-in-right');
                     navigationInProgress = false;
@@ -79,6 +86,12 @@ function showQuestion(num) {
             setTimeout(() => {
                 prevEl.classList.remove('active', 'animate-out-right');
                 nextEl.classList.add('active', 'animate-in-left');
+                
+                // Asegurar que estamos al inicio de la página después de la transición también
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'auto'
+                });
                 
                 setTimeout(() => {
                     nextEl.classList.remove('animate-in-left');
